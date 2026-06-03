@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Roulette tactile - Analyseur Avancé</title>
 <style>
   :root {
@@ -30,6 +30,7 @@
     font-family: Inter, system-ui, sans-serif;
     color: var(--text);
     background: radial-gradient(circle at top, #182540 0%, #0c1221 45%, #070a12 100%);
+    overflow-x: hidden;
   }
 
   .app {
@@ -48,10 +49,11 @@
     letter-spacing: 1px;
   }
 
+  /* minmax(0, ...) empêche l'élargissement des colonnes par leur contenu */
   .layout {
     display: grid;
     gap: 16px;
-    grid-template-columns: 1fr 1.2fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   }
 
   .panel {
@@ -60,6 +62,7 @@
     border-radius: 24px;
     padding: 18px;
     box-shadow: 0 22px 50px rgba(0,0,0,0.22);
+    min-width: 0; /* Empêche les éléments enfants de forcer l'élargissement */
   }
 
   .panel h2 {
@@ -175,6 +178,7 @@
     border-radius: 20px;
     padding: 16px;
     border: 1px solid rgba(255,255,255,0.08);
+    min-width: 0; /* Évite l'étirement des sous-cartes */
   }
 
   .card h3 {
@@ -254,12 +258,15 @@
   /* Bandeau Historique */
   .history-container {
     margin-top: 14px;
+    width: 100%;
+    min-width: 0;
   }
   .history { 
     display: flex; 
     gap: 8px; 
     overflow-x: auto; 
     padding: 6px 4px;
+    width: 100%; /* S'assure que le flex container ne dépasse pas son parent */
   }
   .history span {
     flex: 0 0 38px;
@@ -636,7 +643,7 @@
       streetsTable.appendChild(row);
     });
 
-    // Analyse des Secteurs du Cylindre (Nouveau)
+    // Analyse des Secteurs du Cylindre
     sectorsTable.innerHTML = '';
     sectorStats().forEach(sec => {
       const row = document.createElement('tr');
@@ -670,7 +677,7 @@
       cylTable.appendChild(row);
     });
 
-    // Chances simples (Nouveau)
+    // Chances simples
     chancesTable.innerHTML = '';
     chancesStats().forEach(item => {
       const row = document.createElement('tr');
